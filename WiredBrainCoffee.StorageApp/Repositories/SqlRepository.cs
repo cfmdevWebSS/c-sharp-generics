@@ -12,6 +12,8 @@ namespace WiredBrainCoffee.StorageApp.Repositories
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<T>();
         }
+
+        public event EventHandler<T>? ItemAdded;
         public IEnumerable<T> GetAll()
         {
             return _dbSet.OrderBy(item => item.Id).ToList();
@@ -24,6 +26,7 @@ namespace WiredBrainCoffee.StorageApp.Repositories
         {
             //item.Id = _items.Any() ? _items.Max(item => item.Id) + 1 : 1;
             _dbSet.Add(item);
+            ItemAdded?.Invoke(this, item);
         }
 
         public void Remove(T item)
